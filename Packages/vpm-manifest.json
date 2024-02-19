@@ -1,1 +1,67 @@
-{"dependencies": {}, "locked": {}}
+{
+  "dependencies": {
+    "com.vrchat.core.vpm-resolver": {
+      "version": "0.1.27"
+    },
+    "com.vrchat.worlds": {
+      "version": "3.5.0"
+    },
+    "dev.onevr.vrworldtoolkit": {
+      "version": "2.1.5"
+    },
+    "jp.whiteflare.worldtools": {
+      "version": "1.6.1"
+    },
+    "jp.whiteflare.unlitwf": {
+      "version": "1.10.0"
+    },
+    "net.kaikoga.pen": {
+      "version": "1.0.2"
+    }
+  },
+  "locked": {
+    "com.vrchat.core.vpm-resolver": {
+      "version": "0.1.27",
+      "dependencies": {}
+    },
+    "com.vrchat.worlds": {
+      "version": "3.5.0",
+      "dependencies": {
+        "com.vrchat.base": "3.5.0"
+      }
+    },
+    "com.vrchat.base": {
+      "version": "3.5.0",
+      "dependencies": {}
+    },
+    "dev.onevr.vrworldtoolkit": {
+      "version": "2.1.5",
+      "dependencies": {
+        "com.vrchat.base": "^3.2.x"
+      }
+    },
+    "jp.whiteflare.worldtools": {
+      "version": "1.6.1",
+      "dependencies": {
+        "com.vrchat.worlds": "^3.1.13"
+      }
+    },
+    "jp.whiteflare.unlitwf": {
+      "version": "1.10.0",
+      "dependencies": {
+        "jp.whiteflare.unlitwf.texpack": "^1.1.0"
+      }
+    },
+    "jp.whiteflare.unlitwf.texpack": {
+      "version": "1.1.2",
+      "dependencies": {}
+    },
+    "net.kaikoga.pen": {
+      "version": "1.0.2",
+      "dependencies": {
+        "com.vrchat.base": "^3.0.0",
+        "com.vrchat.worlds": "^3.0.0"
+      }
+    }
+  }
+}
