@@ -1,3 +1,3 @@
-# Combat Assembly Kit
+# Combat Assembly Toolkit
 
-See [README](Packages/com.mimylab.combatassemblykit/README.md)
+See [README](Packages/com.mimylab.combatassemblytoolkit/README.md)

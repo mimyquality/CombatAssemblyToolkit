@@ -9,4 +9,4 @@
 - **Added**
   - VPM初期設定
 
-[0.0.1]: https://github.com/mimyquality/CombatAssemblyKit/releases/tag/0.0.1
+[0.0.1]: https://github.com/mimyquality/CombatAssemblyToolkit/releases/tag/0.0.1

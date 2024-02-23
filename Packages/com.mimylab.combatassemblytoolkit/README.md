@@ -1,4 +1,4 @@
-# Combat Assembly Kit
+# Combat Assembly Toolkit
 
 ## 概要
 
@@ -23,9 +23,9 @@ vpm add repo https://vpm.mimylab.com/index.json
 ### VPMパッケージのインポート
 
 VCCから任意のプロジェクトを選択し、「Manage Project」からManage Packages画面に移動します。  
-読み込んだパッケージが一覧に出てくるので、 **Combat Assembly Kit** の右にある「＋」ボタンを押すか「Installed Version」から直接バージョンを選ぶことで、プロジェクトにインポートします。  
+読み込んだパッケージが一覧に出てくるので、 **Combat Assembly Toolkit** の右にある「＋」ボタンを押すか「Installed Version」から直接バージョンを選ぶことで、プロジェクトにインポートします。  
 
-リポジトリーを使わずに導入したい場合は、[Release](https://github.com/mimyquality/CombatAssemblyKit/releases)からunitypackageファイルをダウンロードして、プロジェクトにインポートしてください。  
+リポジトリーを使わずに導入したい場合は、[Release](https://github.com/mimyquality/CombatAssemblyToolkit/releases)からunitypackageファイルをダウンロードして、プロジェクトにインポートしてください。  
 
 ## ライセンス
 
