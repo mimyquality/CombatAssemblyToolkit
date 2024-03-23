@@ -4,7 +4,7 @@ Released under the MIT license
 https://opensource.org/licenses/mit-license.php
 */
 
-namespace MimyLab.CombatAssemblyKit
+namespace MimyLab.CombatAssemblyToolit
 {
     using System;
     using UdonSharp;
@@ -38,18 +38,21 @@ namespace MimyLab.CombatAssemblyKit
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class CombatUnit : UdonSharpBehaviour
     {
-        public CombatLife life;
         [SerializeField]
-        protected CombatSkill[] holdSkills = new CombatSkill[0];
+        protected CombatLife _life;
+        [SerializeField]
+        protected CombatSkill[] _holdSkills = new CombatSkill[0];
+
+        public VRCPlayerApi UnitOwner { get => _life.UnitOwner; }
 
         protected bool _initialized = false;
         protected virtual void Initialize()
         {
             if (_initialized) { return; }
 
-            for (int i = 0; i < holdSkills.Length; i++)
+            for (int i = 0; i < _holdSkills.Length; i++)
             {
-                if (holdSkills[i]) { holdSkills[i].holder = this; }
+                if (_holdSkills[i]) { _holdSkills[i].holder = this; }
             }
 
             _initialized = true;
@@ -59,22 +62,27 @@ namespace MimyLab.CombatAssemblyKit
             Initialize();
         }
 
-        public virtual void Action(int index)
+        public bool SetUnitOwner(VRCPlayerApi player)
         {
-            if (index >= holdSkills.Length) { return; }
-            if (!holdSkills[index]) { return; }
+            if (!Utilities.IsValid(player)) { return false; }
 
-            if (life.IsDead) { return; }
-            var cost = holdSkills[index].Cost;
-            if (!life.HasResource(cost)) { return; }
+            Networking.SetOwner(player, _life.gameObject);
+            _life.UnitOwnerId = player.playerId;
 
-            life.Consume(cost);
-            holdSkills[index].Action();
+            for (int i = 0; i < _holdSkills.Length; i++)
+            {
+                if (_holdSkills[i])
+                {
+                    Networking.SetOwner(player, _holdSkills[i].gameObject);
+                }
+            }
+
+            return true;
         }
 
         public virtual void OnSkillHit(CombatSkill hitSkill)
         {
-            var damage = hitSkill.Power;
+            /* var damage = hitSkill.Power;
             for (int i = 0; i < holdSkills.Length; i++)
             {
                 if (holdSkills[i])
@@ -91,9 +99,8 @@ namespace MimyLab.CombatAssemblyKit
                 DeadAction();
                 return;
             }
-            life.Consume(damage);
+            life.Consume(damage); */
         }
-
         public virtual void DeadAction() { }
     }
 }

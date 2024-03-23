@@ -4,7 +4,7 @@ Released under the MIT license
 https://opensource.org/licenses/mit-license.php
 */
 
-namespace MimyLab.CombatAssemblyKit
+namespace MimyLab.CombatAssemblyToolit
 {
     using UdonSharp;
     using UnityEngine;
@@ -15,12 +15,14 @@ namespace MimyLab.CombatAssemblyKit
     public class CombatLife : UdonSharpBehaviour
     {
         [SerializeField]
-        private int _maxHP = 10000;
+        private int _maxHP = 100;
         [SerializeField]
-        private int _maxMP = 10000;
+        private int _maxMP = 100;
         [SerializeField]
-        private int _maxSP = 10000;
+        private int _maxSP = 100;
 
+        [UdonSynced]
+        private int _unitOwnerId;
         [UdonSynced, FieldChangeCallback(nameof(IsDead))]
         private bool _isDead = false;
         [UdonSynced, FieldChangeCallback(nameof(HP))]
@@ -34,9 +36,20 @@ namespace MimyLab.CombatAssemblyKit
         [UdonSynced]
         private int _debuff;
 
+        public VRCPlayerApi UnitOwner { get => VRCPlayerApi.GetPlayerById(_unitOwnerId); }
         public int MaxHP { get => _maxHP; }
         public int MaxMP { get => _maxMP; }
         public int MaxSP { get => _maxSP; }
+
+        public int UnitOwnerId
+        {
+            get => _unitOwnerId;
+            set
+            {
+                _unitOwnerId = value;
+                RequestSerialization();
+            }
+        }
 
         public bool IsDead
         {
