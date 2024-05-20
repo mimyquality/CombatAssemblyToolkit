@@ -10,11 +10,10 @@ namespace MimyLab.CombatAssemblyToolit
     using UnityEngine;
     using VRC.SDKBase;
     using VRC.Udon;
-    using VRC.SDK3.Components;
+    //using VRC.SDK3.Components;
 
-    [RequireComponent(typeof(VRCPickup))]
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class GunnerWeapon : CombatUnit
+    public class SimplePickupWeapon : CombatUnit
     {
         public override void OnPickup()
         {
@@ -23,18 +22,7 @@ namespace MimyLab.CombatAssemblyToolit
 
         public override void OnPickupUseDown()
         {
-            ShotAction(_holdSkills[0]);
-        }
-
-        private  void ShotAction(CombatSkill skill)
-        {
-            if (!skill) { return; }
-
-            var cost = skill.Cost;
-            if (!_life.HasResource(cost)) { return; }
-
-            _life.Consume(cost);
-            skill.ShotAction();
+            _holdSkills[0].Action();
         }
     }
 }

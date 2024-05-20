@@ -13,7 +13,7 @@ namespace MimyLab.CombatAssemblyToolit
     using VRC.Udon.Common;
 
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class CombatSkill : UdonSharpBehaviour
+    public abstract class CombatSkill : UdonSharpBehaviour
     {
         public CombatUnit holder;
 

@@ -10,18 +10,15 @@ namespace MimyLab.CombatAssemblyToolit
     using UnityEngine;
     using VRC.SDKBase;
     using VRC.Udon;
-    using VRC.SDK3.Components;
 
-    [RequireComponent(typeof(VRCPickup))]
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class MeleeWeapon : CombatUnit
+    public class BulletShooting : CombatTriggerSkill
     {
+        [SerializeField]
+        private ParticleSystem _bullet;
 
-
-
-        public override void OnPickup()
+        protected override void TriggerAction()
         {
-            SetUnitOwner(Networking.LocalPlayer);
+            _bullet.Emit(1);
         }
     }
 }

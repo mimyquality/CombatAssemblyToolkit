@@ -1,7 +1,7 @@
 {
   "name": "com.mimylab.combatassemblytoolkit",
   "displayName": "Combat Assembly Toolkit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Collection of general purpose action battle gimmicks. Utilizes VRChat's Udonsharp.",
   "unity": "2022.3",
   "author": {

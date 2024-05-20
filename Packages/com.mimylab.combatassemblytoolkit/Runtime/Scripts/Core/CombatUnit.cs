@@ -6,50 +6,27 @@ https://opensource.org/licenses/mit-license.php
 
 namespace MimyLab.CombatAssemblyToolit
 {
-    using System;
     using UdonSharp;
     using UnityEngine;
     using VRC.SDKBase;
-    using VRC.Udon;
-    using VRC.SDK3.Components;
+    //using VRC.Udon;
 
-    [Flags]
-    public enum CombatElement
+    public abstract class CombatUnit : UdonSharpBehaviour
     {
-        None = 0,
-        Fire = 1 << 0,
-        Earth = 1 << 1,
-        Water = 1 << 2,
-        Air = 1 << 3,
-    }
-    [Flags]
-    public enum CombatUnitBuff
-    {
-        None = 0,
-        Dummy = 1 << 0,
-    }
-    [Flags]
-    public enum CombatUnitDebuff
-    {
-        None = 0,
-        Dummy = 1 << 0,
-    }
+        [HideInInspector]
+        public int unitId = -1;
 
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class CombatUnit : UdonSharpBehaviour
-    {
         [SerializeField]
         protected CombatLife _life;
         [SerializeField]
-        protected CombatSkill[] _holdSkills = new CombatSkill[0];
+        protected ICombatSkill[] _holdSkills = new ICombatSkill[0];
 
-        public VRCPlayerApi UnitOwner { get => _life.UnitOwner; }
-
-        protected bool _initialized = false;
-        protected virtual void Initialize()
+        private bool _initialized = false;
+        private void Initialize()
         {
             if (_initialized) { return; }
 
+            if (_life) { _life.unit = this; }
             for (int i = 0; i < _holdSkills.Length; i++)
             {
                 if (_holdSkills[i]) { _holdSkills[i].holder = this; }
@@ -57,18 +34,39 @@ namespace MimyLab.CombatAssemblyToolit
 
             _initialized = true;
         }
-        private void Start()
+        protected virtual void Start()
         {
             Initialize();
         }
 
+        /******************************
+         CombatUnitのイベント
+        ******************************/
+        public virtual void OnUnitBirth() { }
+        public virtual void OnUnitDead() { }
+
+        public virtual void SetSkill(ICombatSkill skill, int index) { }
+
+        /******************************
+         CombatLifeからのイベント
+        ******************************/
+        public virtual void OnResourceChanged(int index, int newValue) { }
+        public virtual void OnConditionChanged(int index, int newValue) { }
+        public virtual void OnAbilityChanged(int index, float newValue) { }
+
+        /******************************
+         CombatSkillからのイベント
+        ******************************/
+        public virtual void OnSkillHit(ICombatSkill hitSkill) { }
+
+        /******************************
+         publicメソッド
+        ******************************/
         public bool SetUnitOwner(VRCPlayerApi player)
         {
             if (!Utilities.IsValid(player)) { return false; }
 
-            Networking.SetOwner(player, _life.gameObject);
-            _life.UnitOwnerId = player.playerId;
-
+            if (_life) { Networking.SetOwner(player, _life.gameObject); }
             for (int i = 0; i < _holdSkills.Length; i++)
             {
                 if (_holdSkills[i])
@@ -79,28 +77,5 @@ namespace MimyLab.CombatAssemblyToolit
 
             return true;
         }
-
-        public virtual void OnSkillHit(CombatSkill hitSkill)
-        {
-            /* var damage = hitSkill.Power;
-            for (int i = 0; i < holdSkills.Length; i++)
-            {
-                if (holdSkills[i])
-                {
-                    damage = holdSkills[i].Reaction(damage);
-                }
-            }
-
-            // SPをシールド値として扱うならここで換算？
-
-            // 最終的に通るダメージで死亡判定
-            if (life.IsDead = life.IsFatal(damage.x))
-            {
-                DeadAction();
-                return;
-            }
-            life.Consume(damage); */
-        }
-        public virtual void DeadAction() { }
     }
 }
