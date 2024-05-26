@@ -19,7 +19,7 @@ namespace MimyLab.CombatAssemblyToolit
         [SerializeField]
         protected CombatLife _life;
         [SerializeField]
-        protected ICombatSkill[] _holdSkills = new ICombatSkill[0];
+        protected CombatSkill[] _holdSkills = new CombatSkill[0];
 
         private bool _initialized = false;
         private void Initialize()
@@ -45,8 +45,6 @@ namespace MimyLab.CombatAssemblyToolit
         public virtual void OnUnitBirth() { }
         public virtual void OnUnitDead() { }
 
-        public virtual void SetSkill(ICombatSkill skill, int index) { }
-
         /******************************
          CombatLifeからのイベント
         ******************************/
@@ -57,7 +55,7 @@ namespace MimyLab.CombatAssemblyToolit
         /******************************
          CombatSkillからのイベント
         ******************************/
-        public virtual void OnSkillHit(ICombatSkill hitSkill) { }
+        public virtual void OnSkillHit(CombatSkill hitSkill) { }
 
         /******************************
          publicメソッド
@@ -77,5 +75,9 @@ namespace MimyLab.CombatAssemblyToolit
 
             return true;
         }
+        
+        public virtual void SetSkill(CombatSkill skill, int index) { }
+        
+        public virtual void Operation(int index) { }
     }
 }

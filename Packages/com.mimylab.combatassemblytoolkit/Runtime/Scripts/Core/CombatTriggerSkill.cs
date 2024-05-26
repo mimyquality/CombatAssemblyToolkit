@@ -13,7 +13,7 @@ namespace MimyLab.CombatAssemblyToolit
     using VRC.Udon.Common;
 
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class CombatTriggerSkill : ICombatSkill
+    public class CombatTriggerSkill : CombatSkill
     {
         [SerializeField, Min(0.5f), Tooltip("sec")]
         private float _coolDownTime = 3.0f;
@@ -112,6 +112,7 @@ namespace MimyLab.CombatAssemblyToolit
             }
 
             DoAction();
+            RequestSerialization();
         }
         public void _WarmingCountdown()
         {
@@ -126,13 +127,14 @@ namespace MimyLab.CombatAssemblyToolit
             }
 
             IsWarming = false;
-            DoAction();            
-            sync_flagDoAction = true;
+            DoAction();
             RequestSerialization();
         }
 
         private void DoAction()
         {
+            sync_flagDoAction = true;
+
             StartCoolDown();
             TriggerAction();
         }
