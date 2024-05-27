@@ -15,6 +15,7 @@ namespace MimyLab.CombatAssemblyToolit
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class CombatTriggerSkill : CombatSkill
     {
+        [Header("General Settings")]
         [SerializeField, Min(0.5f), Tooltip("sec")]
         private float _coolDownTime = 3.0f;
         [SerializeField, Min(0.0f), Tooltip("sec")]

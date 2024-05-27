@@ -4,14 +4,13 @@ Released under the MIT license
 https://opensource.org/licenses/mit-license.php
 */
 
-namespace MimyLab
+namespace MimyLab.CombatAssemblyToolit
 {
     using UdonSharp;
     using UnityEngine;
     using VRC.SDKBase;
     using VRC.Udon;
     using VRC.Udon.Common;
-    using CombatAssemblyToolit;
 
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DragonCommand : UdonSharpBehaviour

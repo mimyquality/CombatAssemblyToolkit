@@ -10,13 +10,18 @@ namespace MimyLab.CombatAssemblyToolit
     using UnityEngine;
     using VRC.SDKBase;
     using VRC.Udon;
-    using VRC.SDK3.Components;
 
     [RequireComponent(typeof(ParticleSystem))]
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DragonBreathInvolver : CombatInvolver
     {
-        private ParticleSystem _breathEffect;
+        [HideInInspector]
+        public ParticleSystem breathEffect;
+
+        private void Start()
+        {
+            breathEffect = GetComponent<ParticleSystem>();
+        }
 
         private void OnParticleCollision(GameObject other)
         {
@@ -26,9 +31,7 @@ namespace MimyLab.CombatAssemblyToolit
 
         public override void Generate()
         {
-            if (!_breathEffect) _breathEffect = GetComponent<ParticleSystem>();
-            
-            _breathEffect.Emit(1);
+            breathEffect.Emit(1);
         }
 
         public override void Involve(CombatUnit unit)

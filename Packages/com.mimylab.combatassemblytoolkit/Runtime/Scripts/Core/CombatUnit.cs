@@ -16,6 +16,7 @@ namespace MimyLab.CombatAssemblyToolit
         [HideInInspector]
         public int unitId = -1;
 
+        [Header("General Settings")]
         [SerializeField]
         protected CombatLife _life;
         [SerializeField]
@@ -75,9 +76,9 @@ namespace MimyLab.CombatAssemblyToolit
 
             return true;
         }
-        
+
         public virtual void SetSkill(CombatSkill skill, int index) { }
-        
+
         public virtual void Operation(int index) { }
     }
 }

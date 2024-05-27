@@ -17,6 +17,6 @@ namespace MimyLab.CombatAssemblyToolit
         public CombatUnit holder;
 
         public abstract void Action();
-        public abstract void Cancel();        
+        public abstract void Cancel();
     }
 }

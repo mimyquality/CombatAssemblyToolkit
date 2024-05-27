@@ -1,21 +1,24 @@
-﻿
-namespace MimyLab
+﻿/*
+Copyright (c) 2024 Mimy Quality
+Released under the MIT license
+https://opensource.org/licenses/mit-license.php
+*/
+
+namespace MimyLab.CombatAssemblyToolit
 {
     using UdonSharp;
     using UnityEngine;
     using VRC.SDKBase;
     using VRC.Udon;
-    using CombatAssemblyToolit;
 
     public class DragonBreath : CombatTriggerSkill
     {
+        [Header("Dragon Settings")]
         [SerializeField]
         private DragonBreathInvolver _involver;
 
         [SerializeField]
         private GameObject _chargeEffect;
-        [SerializeField]
-        private float _ownerDelayTime = 0.5f;
 
         [UdonSynced]
         private Vector3 sync_involvePosition;
@@ -25,29 +28,31 @@ namespace MimyLab
         [UdonSynced]
         private bool sync_flagSkillHit;
 
-        public void _GenerateInvolver()
-        {
-            _involver.gameObject.SetActive(true);
-            _involver.Generate();
-        }
-
         protected override void TriggerAction()
         {
             if (Networking.IsOwner(this.gameObject))
             {
-                _chargeEffect.SetActive(true);
-                SendCustomEventDelayedSeconds(nameof(_GenerateInvolver), _ownerDelayTime);
-
                 sync_involvePosition = _involver.transform.position;
                 sync_involveRotation = _involver.transform.rotation;
+
+                var collisionModule = _involver.breathEffect.collision;
+                collisionModule.collidesWith = collisionModule.collidesWith & ~(1 << 23);
             }
             else
             {
                 _involver.transform.SetPositionAndRotation(sync_involvePosition, sync_involveRotation);
-                _GenerateInvolver();
+
+                var collisionModule = _involver.breathEffect.collision;
+                collisionModule.collidesWith = collisionModule.collidesWith | (1 << 23);
             }
+
+            _involver.gameObject.SetActive(true);
+            _involver.Generate();
         }
 
-        protected override void ToggleWarning(bool isOn) { }
+        protected override void ToggleWarning(bool isOn)
+        {
+            if (isOn) _chargeEffect.SetActive(true);
+        }
     }
 }

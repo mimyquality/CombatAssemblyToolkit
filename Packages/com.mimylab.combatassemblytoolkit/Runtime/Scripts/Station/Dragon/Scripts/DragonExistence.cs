@@ -1,12 +1,16 @@
-﻿
-namespace MimyLab
+﻿/*
+Copyright (c) 2024 Mimy Quality
+Released under the MIT license
+https://opensource.org/licenses/mit-license.php
+*/
+
+namespace MimyLab.CombatAssemblyToolit
 {
     using System;
     using UdonSharp;
     using UnityEngine;
     using VRC.SDKBase;
     using VRC.Udon;
-    using CombatAssemblyToolit;
 
     [Flags]
     public enum CombatElementFlag
@@ -31,10 +35,19 @@ namespace MimyLab
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DragonExistence : CombatUnit
     {
+        [Header("Dragon Settings")]
+        [SerializeField]
+        private int _hitBoxLayer = 22;
+        [SerializeField]
+        private int _hitBoxLocalLayer = 23;
+
+        private Collider[] _colliders = new Collider[0];
         private DragonCommand _command;
 
         protected override void Start()
         {
+            _colliders = GetComponentsInChildren<Collider>();
+            SetCollisionLayer(_hitBoxLayer);
             _command = GetComponent<DragonCommand>();
             _command.enabled = false;
             base.Start();
@@ -54,6 +67,7 @@ namespace MimyLab
         public void _OnLocalPlayerRide()
         {
             SetUnitOwner(Networking.LocalPlayer);
+            SetCollisionLayer(_hitBoxLocalLayer);
             // 戦闘状況を開始
 
             // Triggerコマンド受付
@@ -62,6 +76,7 @@ namespace MimyLab
 
         public void _OnLocalPlayerExit()
         {
+            SetCollisionLayer(_hitBoxLayer);
             // 戦闘状況を終了
 
             // Triggerコマンド停止
@@ -75,6 +90,14 @@ namespace MimyLab
                 case DragonExistenceOperationType.LeftHandUseDown: _holdSkills[0].Action(); break;
                 case DragonExistenceOperationType.LeftHandUseUp: _holdSkills[0].Cancel(); break;
                 case DragonExistenceOperationType.RightHandUseDown: _holdSkills[1].Action(); break;
+            }
+        }
+
+        private void SetCollisionLayer(int index)
+        {
+            for (int i = 0; i < _colliders.Length; i++)
+            {
+                _colliders[i].gameObject.layer = index;
             }
         }
     }
