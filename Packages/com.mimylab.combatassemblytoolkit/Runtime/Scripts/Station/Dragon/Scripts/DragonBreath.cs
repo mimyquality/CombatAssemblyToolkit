@@ -10,13 +10,18 @@ namespace MimyLab.CombatAssemblyToolit
     using UnityEngine;
     using VRC.SDKBase;
     using VRC.Udon;
+    using VRC.Udon.Common;
 
     public class DragonBreath : CombatTriggerSkill
     {
+        private const int MaxHitCount = 5;
+
+        [SerializeField]
+        private string _gameMasterObjectName = "GameMaster";
+
         [Header("Dragon Settings")]
         [SerializeField]
         private DragonBreathInvolver _involver;
-
         [SerializeField]
         private GameObject _chargeEffect;
 
@@ -27,6 +32,63 @@ namespace MimyLab.CombatAssemblyToolit
 
         [UdonSynced]
         private bool sync_flagSkillHit;
+        [UdonSynced]
+        private int[] sync_hitUnitsId = new int[MaxHitCount];
+
+        private CombatGameMaster _gameMaster;
+        private CombatUnit[] _hitUnitQueue = new CombatUnit[MaxHitCount];
+
+        private void Start()
+        {
+            _gameMaster = GameObject.Find(_gameMasterObjectName).GetComponent<CombatGameMaster>();
+        }
+
+        public override void OnPostSerialization(SerializationResult result)
+        {
+            base.OnPostSerialization(result);
+
+            if (sync_flagSkillHit)
+            {
+                sync_flagSkillHit = false;
+                for (int i = 0; i < sync_hitUnitsId.Length; i++)
+                {
+                    sync_hitUnitsId[i] = 0;
+                }
+                RequestSerialization();
+            }
+        }
+
+        public override void OnDeserialization()
+        {
+            base.OnDeserialization();
+
+            if (sync_flagSkillHit)
+            {
+                for (int i = 0; i < sync_hitUnitsId.Length; i++)
+                {
+                    var unit = _gameMaster.GetUnitById(sync_hitUnitsId[i]);
+                    if (unit) { unit.OnSkillHit(this); }
+                    sync_hitUnitsId[i] = 0;
+                }
+
+                sync_flagSkillHit = false;
+            }
+        }
+
+        public override void OnUnitHit(CombatUnit unit)
+        {
+            unit.OnSkillHit(this);
+
+            sync_flagSkillHit = true;
+            for (int i = 0; i < sync_hitUnitsId.Length; i++)
+            {
+                if (sync_hitUnitsId[i] > 0) { continue; }
+
+                sync_hitUnitsId[i] = unit.unitId;
+                break;
+            }
+            RequestSerialization();
+        }
 
         protected override void TriggerAction()
         {
@@ -34,16 +96,10 @@ namespace MimyLab.CombatAssemblyToolit
             {
                 sync_involvePosition = _involver.transform.position;
                 sync_involveRotation = _involver.transform.rotation;
-
-                var collisionModule = _involver.breathEffect.collision;
-                collisionModule.collidesWith = collisionModule.collidesWith & ~(1 << 23);
             }
             else
             {
                 _involver.transform.SetPositionAndRotation(sync_involvePosition, sync_involveRotation);
-
-                var collisionModule = _involver.breathEffect.collision;
-                collisionModule.collidesWith = collisionModule.collidesWith | (1 << 23);
             }
 
             _involver.gameObject.SetActive(true);

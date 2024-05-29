@@ -35,11 +35,7 @@ namespace MimyLab.CombatAssemblyToolit
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DragonExistence : CombatUnit
     {
-        [Header("Dragon Settings")]
-        [SerializeField]
-        private int _hitBoxLayer = 22;
-        [SerializeField]
-        private int _hitBoxLocalLayer = 23;
+        //[Header("Dragon Settings")]
 
         private Collider[] _colliders = new Collider[0];
         private DragonCommand _command;
@@ -47,7 +43,6 @@ namespace MimyLab.CombatAssemblyToolit
         protected override void Start()
         {
             _colliders = GetComponentsInChildren<Collider>();
-            SetCollisionLayer(_hitBoxLayer);
             _command = GetComponent<DragonCommand>();
             _command.enabled = false;
             base.Start();
@@ -67,7 +62,6 @@ namespace MimyLab.CombatAssemblyToolit
         public void _OnLocalPlayerRide()
         {
             SetUnitOwner(Networking.LocalPlayer);
-            SetCollisionLayer(_hitBoxLocalLayer);
             // 戦闘状況を開始
 
             // Triggerコマンド受付
@@ -76,7 +70,6 @@ namespace MimyLab.CombatAssemblyToolit
 
         public void _OnLocalPlayerExit()
         {
-            SetCollisionLayer(_hitBoxLayer);
             // 戦闘状況を終了
 
             // Triggerコマンド停止
@@ -93,7 +86,7 @@ namespace MimyLab.CombatAssemblyToolit
             }
         }
 
-        private void SetCollisionLayer(int index)
+        public void _SetHitBoxLayer(int index)
         {
             for (int i = 0; i < _colliders.Length; i++)
             {

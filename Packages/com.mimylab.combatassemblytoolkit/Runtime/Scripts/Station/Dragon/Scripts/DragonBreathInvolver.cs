@@ -15,23 +15,27 @@ namespace MimyLab.CombatAssemblyToolit
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DragonBreathInvolver : CombatInvolver
     {
-        [HideInInspector]
-        public ParticleSystem breathEffect;
+        [SerializeField]
+        private DragonBreath _dragonBreath;
+        private ParticleSystem _breathEffect;
 
         private void Start()
         {
-            breathEffect = GetComponent<ParticleSystem>();
+            _breathEffect = GetComponent<ParticleSystem>();
         }
 
         private void OnParticleCollision(GameObject other)
         {
+            if (!Networking.IsOwner(_dragonBreath.gameObject)) { return; }
             if (!Utilities.IsValid(other)) { return; }
 
+            var unit = other.GetComponent<CombatUnit>();
+            if (unit) { _dragonBreath.OnUnitHit(unit); }
         }
 
         public override void Generate()
         {
-            breathEffect.Emit(1);
+            _breathEffect.Emit(1);
         }
 
         public override void Involve(CombatUnit unit)

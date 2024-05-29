@@ -6,6 +6,7 @@ https://opensource.org/licenses/mit-license.php
 
 namespace MimyLab.CombatAssemblyToolit
 {
+    using System.Net.NetworkInformation;
     using UdonSharp;
     using UnityEngine;
     using VRC.SDKBase;
@@ -23,11 +24,11 @@ namespace MimyLab.CombatAssemblyToolit
 
         [UdonSynced]
         private bool sync_flagDoAction;
-        private bool _doAction;
 
         private float _remainingCoolDownTime = 0.0f;
         private float _remainingWarmUpTime = 0.0f;
 
+        public override bool IsAct { get => false; }
         public float RemainingCoolDownTime { get => _remainingCoolDownTime; }
         public bool IsCooling { get => _remainingCoolDownTime > 0.0f; }
         public float RemainingWarmUpTime { get => _remainingWarmUpTime; }

@@ -22,6 +22,11 @@ namespace MimyLab.CombatAssemblyToolit
 
         public override void OnPickupUseDown()
         {
+            Operation(0);
+        }
+
+        public override void Operation(int index)
+        {
             _holdSkills[0].Action();
         }
     }

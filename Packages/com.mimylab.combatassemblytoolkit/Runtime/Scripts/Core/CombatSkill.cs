@@ -16,6 +16,10 @@ namespace MimyLab.CombatAssemblyToolit
         [HideInInspector]
         public CombatUnit holder;
 
+        public abstract bool IsAct { get; }
+
+        public virtual void OnUnitHit(CombatUnit unit) { }
+
         public abstract void Action();
         public abstract void Cancel();
     }

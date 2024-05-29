@@ -14,7 +14,7 @@ namespace MimyLab.CombatAssemblyToolit
     public abstract class CombatUnit : UdonSharpBehaviour
     {
         [HideInInspector]
-        public int unitId = -1;
+        public int unitId;
 
         [Header("General Settings")]
         [SerializeField]
@@ -61,7 +61,7 @@ namespace MimyLab.CombatAssemblyToolit
         /******************************
          publicメソッド
         ******************************/
-        public bool SetUnitOwner(VRCPlayerApi player)
+        public virtual bool SetUnitOwner(VRCPlayerApi player)
         {
             if (!Utilities.IsValid(player)) { return false; }
 
@@ -78,7 +78,6 @@ namespace MimyLab.CombatAssemblyToolit
         }
 
         public virtual void SetSkill(CombatSkill skill, int index) { }
-
-        public virtual void Operation(int index) { }
+        public abstract void Operation(int index);
     }
 }
