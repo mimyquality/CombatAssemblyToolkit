@@ -13,7 +13,8 @@ namespace MimyLab.CombatAssemblyToolit
 
     public abstract class CombatUnit : UdonSharpBehaviour
     {
-        [HideInInspector]
+        public Collider[] hitBox = new Collider[0];
+        //[HideInInspector]
         public int unitId;
 
         [Header("General Settings")]

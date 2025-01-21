@@ -13,7 +13,11 @@ namespace MimyLab.CombatAssemblyToolit
 
     public abstract class CombatInvolver : UdonSharpBehaviour
     {
-        public abstract void Generate();
-        public abstract void Involve(CombatUnit unit);
+        [HideInInspector]
+        public CombatGameMaster gamemaster;
+        [HideInInspector]
+        public CombatSkill skill;
+
+        public abstract void Involve();
     }
 }

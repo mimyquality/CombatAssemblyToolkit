@@ -33,14 +33,37 @@ namespace MimyLab.CombatAssemblyToolit
         [UdonSynced]
         private bool sync_flagSkillHit;
         [UdonSynced]
-        private int[] sync_hitUnitsId = new int[MaxHitCount];
+        private int[] sync_hitUnitQueue = new int[MaxHitCount];
 
         private CombatGameMaster _gameMaster;
-        private CombatUnit[] _hitUnitQueue = new CombatUnit[MaxHitCount];
+        private int[] _hitUnitQueue = new int[MaxHitCount];
 
         private void Start()
         {
             _gameMaster = GameObject.Find(_gameMasterObjectName).GetComponent<CombatGameMaster>();
+            _involver.gamemaster = _gameMaster;
+            _involver.skill = this;
+        }
+
+        public override void OnPreSerialization()
+        {
+            base.OnPreSerialization();
+
+            for (int i = 0; i < _hitUnitQueue.Length; i++)
+            {
+                if (_hitUnitQueue[i] > 0)
+                {
+                    for (int j = 0; j < sync_hitUnitQueue.Length; j++)
+                    {
+                        if (sync_hitUnitQueue[j] > 0) { continue; }
+
+                        sync_hitUnitQueue[j] = _hitUnitQueue[i];
+                        _hitUnitQueue[i] = 0;
+                        sync_flagSkillHit = true;
+                        break;
+                    }
+                }
+            }
         }
 
         public override void OnPostSerialization(SerializationResult result)
@@ -49,11 +72,12 @@ namespace MimyLab.CombatAssemblyToolit
 
             if (sync_flagSkillHit)
             {
-                sync_flagSkillHit = false;
-                for (int i = 0; i < sync_hitUnitsId.Length; i++)
+                for (int i = 0; i < sync_hitUnitQueue.Length; i++)
                 {
-                    sync_hitUnitsId[i] = 0;
+                    sync_hitUnitQueue[i] = 0;
                 }
+
+                sync_flagSkillHit = false;
                 RequestSerialization();
             }
         }
@@ -64,11 +88,11 @@ namespace MimyLab.CombatAssemblyToolit
 
             if (sync_flagSkillHit)
             {
-                for (int i = 0; i < sync_hitUnitsId.Length; i++)
+                for (int i = 0; i < sync_hitUnitQueue.Length; i++)
                 {
-                    var unit = _gameMaster.GetUnitById(sync_hitUnitsId[i]);
+                    var unit = _gameMaster.GetUnitById(sync_hitUnitQueue[i]);
                     if (unit) { unit.OnSkillHit(this); }
-                    sync_hitUnitsId[i] = 0;
+                    sync_hitUnitQueue[i] = 0;
                 }
 
                 sync_flagSkillHit = false;
@@ -77,14 +101,15 @@ namespace MimyLab.CombatAssemblyToolit
 
         public override void OnUnitHit(CombatUnit unit)
         {
+            if (!Networking.IsOwner(this.gameObject)) { return; }
+
             unit.OnSkillHit(this);
 
-            sync_flagSkillHit = true;
-            for (int i = 0; i < sync_hitUnitsId.Length; i++)
+            for (int i = 0; i < _hitUnitQueue.Length; i++)
             {
-                if (sync_hitUnitsId[i] > 0) { continue; }
+                if (_hitUnitQueue[i] > 0) { continue; }
 
-                sync_hitUnitsId[i] = unit.unitId;
+                _hitUnitQueue[i] = unit.unitId;
                 break;
             }
             RequestSerialization();
@@ -103,7 +128,7 @@ namespace MimyLab.CombatAssemblyToolit
             }
 
             _involver.gameObject.SetActive(true);
-            _involver.Generate();
+            _involver.Involve();
         }
 
         protected override void ToggleWarning(bool isOn)
