@@ -8,6 +8,9 @@
     "name": "Mimy Quality",
     "url": "https://github.com/mimyquality"
   },
+  "documentationUrl": "https://github.com/mimyquality/CombatAssemblyToolkit/blob/main/Packages/com.mimylab.combatassemblytoolkit/README.md",
+  "changelogUrl":"https://github.com/mimyquality/CombatAssemblyToolkit/blob/main/Packages/com.mimylab.combatassemblytoolkit/CHANGELOG.md",
+  "licensesUrl":"https://github.com/mimyquality/CombatAssemblyToolkit/blob/main/Packages/com.mimylab.combatassemblytoolkit/LICENSE.md",  
   "dependencies": {},
   "gitDependencies": {},
   "vpmDependencies": {
